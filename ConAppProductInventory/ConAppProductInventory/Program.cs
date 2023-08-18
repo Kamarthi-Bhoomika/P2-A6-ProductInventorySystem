@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace ConAppProductInventory
 {
@@ -130,6 +131,7 @@ namespace ConAppProductInventory
                 Console.WriteLine("Product Updated!!");
             }
             else
+
             {
                 Console.WriteLine($"No such id {uid} exist in database");
             }
@@ -142,22 +144,19 @@ namespace ConAppProductInventory
             rid = int.Parse(Console.ReadLine());
             con.Open();
             cmd.Connection = con;
-            cmd.CommandText = "select * from Products where ProductId=@rid";
             cmd.Parameters.AddWithValue("@rid", rid);
-            reader = cmd.ExecuteReader();
-            if (reader.HasRows)
+            cmd.CommandText = "delete from Products where ProductId = @rid";
+            int num = cmd.ExecuteNonQuery();
+            if(num >= 1)
             {
-                con.Close();
-                con.Open();
-                cmd.CommandText = "delete from Products where ProductId = @rid";
-                cmd.ExecuteNonQuery();
-                Console.WriteLine("Product Removed!!");
+                Console.WriteLine("Product Deleted!!");
             }
             else
             {
                 Console.WriteLine($"No such id {rid} exist in database");
             }
             con.Close();
+            
         }
     }
 }
